@@ -434,7 +434,6 @@ ADD( vMatrix< F > V, vMatrix< F > L, vArray< F > R ) {
 }
 template	< typename F >	Matrix< F >
 operator +( const vMatrix< F >& L, const vArray< F >& R ) {
-	if ( L.w != R.n ) throw "( l.w != r.n ):operator +( const Matrix< F >&, const vArray< F >& )";
 	Matrix< F >	v( L.h, L.w );
 	ADD<<< grid2D( v.h, v.w ), thread2D() >>>( v, L, R );
 	cudaDeviceSynchronize();
