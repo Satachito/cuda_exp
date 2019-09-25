@@ -10,7 +10,7 @@ vArray {
 	:	_( _ )
 	,	n( n ) {
 	}
-	F&
+	__host__ __device__ F&
 	operator[]( size_t I ) const {
 		return _[ I ];
 	}
@@ -49,7 +49,7 @@ vMatrix {
 	,	v( v ) {
 	}
 
-	F&
+	__host__ __device__ F&
 	operator()( size_t Y, size_t X ) const {
 		return _[ Y * v + X ];
 	}
@@ -142,7 +142,7 @@ template	< typename F >	__global__	void
 SIGMOID( vMatrix< F > V, vMatrix< F >  P ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] = 1 / ( 1 + exp( - P._[ y * P.v + x ] ) );
+	V( y, x ) = 1 / ( 1 + exp( - P( y, x ) ) );
 }
 template	< typename F >	Matrix< F >
 sigmoid( const vMatrix< F >& P ) {
@@ -163,7 +163,7 @@ template	< typename F >	__global__	void
 RELU( vMatrix< F > V, vMatrix< F >  P ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] = max( F( 0 ), P._[ y * P.v + x ] );
+	V( y, x ) = max( F( 0 ), P( y, x ) );
 }
 template	< typename F >	Matrix< F >
 ReLU( const vMatrix< F >& P ) {
@@ -188,7 +188,7 @@ DOT( vMatrix< F > V, vMatrix< F > L, vMatrix< F > R, size_t WH ) {
 	auto rp = R._ + x;
 	F w = 0;
 	for ( size_t _ = 0; _ < WH; _++ ) w += lp[ _ ] * rp[ _ * R.v ];
-	V._[ y * V.v + x ] = w;
+	V( y, x ) = w;
 }
 template	< typename F >	Matrix< F >
 operator *( const vMatrix< F >& L, const vMatrix< F >& R ) {
@@ -231,7 +231,7 @@ template	< typename F >	__global__	void
 ADD( vMatrix< F > V, vMatrix< F > L, vMatrix< F > R ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] = L._[ y * L.v + x ] + R._[ y * R.v + x ];
+	V( y, x ) = L( y, x ) + R( y, x );
 }
 template	< typename F >	Matrix< F >
 operator +( const vMatrix< F >& L, const vMatrix< F >& R ) {
@@ -273,7 +273,7 @@ template	< typename F >	__global__	void
 EXP( vMatrix< F > V, vMatrix< F >  P ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] = exp( P._[ y * P.v + x ] );
+	V( y, x ) = exp( P( y, x ) );
 }
 template	< typename F >	Matrix< F >
 exp( const vMatrix< F >& P ) {
@@ -294,7 +294,7 @@ template	< typename F >	__global__	void
 DIV_INP( vMatrix< F > V, F P ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] /= P;
+	V( y, x ) /= P;
 }
 template	< typename F >	void
 operator /=( const vMatrix< F >& L, F R ) {
@@ -326,7 +326,7 @@ template	< typename F >	__global__	void
 SUB_C( vMatrix< F > V, vMatrix< F > L, F R ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] = L._[ y * L.v + x ] - R;
+	V( y, x ) = L( y, x ) - R;
 }
 template	< typename F >	Matrix< F >
 operator -( const vMatrix< F >& L, F R ) {
@@ -430,7 +430,7 @@ template	< typename F >	__global__	void
 ADD( vMatrix< F > V, vMatrix< F > L, vArray< F > R ) {
 	auto y = (size_t)blockIdx.y * blockDim.y + threadIdx.y;	if ( y >= V.h ) return;
 	auto x = (size_t)blockIdx.x * blockDim.x + threadIdx.x;	if ( x >= V.w ) return;
-	V._[ y * V.v + x ] = L._[ y * L.v + x ] + R._[ x ];
+	V( y, x ) = L( y, x ) + R[ x ];
 }
 template	< typename F >	Matrix< F >
 operator +( const vMatrix< F >& L, const vArray< F >& R ) {
