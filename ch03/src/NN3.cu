@@ -242,7 +242,7 @@ operator +( const vMatrix< F >& L, const vMatrix< F >& R ) {
 }
 
 template	< typename F >	Matrix< F >
-forward( map< string, Matrix< F > >& network, const Matrix< F >& x ) {
+forward( map< string, Matrix< F > >& network, const vMatrix< F >& x ) {
 	auto W1 = network.at( "W1" );
 	auto W2 = network.at( "W2" );
 	auto W3 = network.at( "W3" );
