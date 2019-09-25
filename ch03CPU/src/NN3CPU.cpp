@@ -298,29 +298,29 @@ _3_5_3() {
 template    < typename F >  map< string, Matrix< F > >
 get_data() {
     map< string, Matrix< F > > v;
-    {   ifstream ifs( "../NN3/train-images.idx3-ubyte" );
-        if ( ! ifs.is_open() ) throw "../NN3/train-images.idx3-ubyte";
+    {   ifstream ifs( "../ch03/train-images.idx3-ubyte" );
+        if ( ! ifs.is_open() ) throw "../ch03/train-images.idx3-ubyte";
         ifs.ignore( 16 );
         Matrix< F > w( 60000, 28 * 28 );
         for ( size_t _ = 0; _ < w.h * w.w; _++ ) w._[ _ ] = ( (unsigned char)ifs.get() ) / 255.0;
         v.emplace( "x_train", w );
     }
-    {   ifstream ifs( "../NN3/train-labels.idx1-ubyte" );
-        if ( ! ifs.is_open() ) throw "../NN3/train-labels.idx1-ubyte";
+    {   ifstream ifs( "../ch03/train-labels.idx1-ubyte" );
+        if ( ! ifs.is_open() ) throw "../ch03/train-labels.idx1-ubyte";
         ifs.ignore( 8 );
         Matrix< F > w( 1, 60000 );
         for ( size_t _ = 0; _ < w.h * w.w; _++ ) w._[ _ ] = ifs.get();
         v.emplace( "t_train", w );
     }
-    {   ifstream ifs( "../NN3/t10k-images.idx3-ubyte" );
-        if ( ! ifs.is_open() ) throw "../NN3/t10k-images.idx3-ubyte";
+    {   ifstream ifs( "../ch03/t10k-images.idx3-ubyte" );
+        if ( ! ifs.is_open() ) throw "../ch03/t10k-images.idx3-ubyte";
         ifs.ignore( 16 );
         Matrix< F > w( 10000, 28 * 28 );
         for ( size_t _ = 0; _ < w.h * w.w; _++ ) w._[ _ ] = ( (unsigned char)ifs.get() ) / 255.0;
         v.emplace( "x_test", w );
     }
-    {   ifstream ifs( "../NN3/t10k-labels.idx1-ubyte" );
-        if ( ! ifs.is_open() ) throw "../NN3/t10k-labels.idx1-ubyte";
+    {   ifstream ifs( "../ch03/t10k-labels.idx1-ubyte" );
+        if ( ! ifs.is_open() ) throw "../ch03/t10k-labels.idx1-ubyte";
         ifs.ignore( 8 );
         Matrix< F > w( 1, 10000 );
         for ( size_t _ = 0; _ < w.h * w.w; _++ ) w._[ _ ] = ifs.get();
@@ -332,8 +332,8 @@ get_data() {
 map< string, Matrix< double > >
 init_network() {
     map< string, Matrix< double > > v;
-    ifstream    ifs( "../NN3/sample_weight.bin" );
-    if ( ! ifs.is_open() ) throw "../NN3/sample_weight.bin";
+    ifstream    ifs( "../ch03/sample_weight.bin" );
+    if ( ! ifs.is_open() ) throw "../ch03/sample_weight.bin";
 
     {   Matrix< double > w( 784, 50 );
         ifs.read( (char*)w._, w.h * w.w * sizeof( double ) );
@@ -475,6 +475,6 @@ Main() {
 }
 int
 main( int argc, char* argv[] ) {
-    Main< double >();
+	Main< double >();
 }
 
